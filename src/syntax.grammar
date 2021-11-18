@@ -1,26 +1,21 @@
-@top Program { expression* }
+@top Conf { expression* }
 
 @skip { space | LineComment }
 
+Text { text+ }
+
 expression {
-  Identifier |
-  String |
-  Boolean |
-  Application { "(" expression* ")" }
+  Header { '[' (Include|Text) ']' }
 }
 
+Include { "include " Text }
+
 @tokens {
-  Identifier { $[a-zA-Z_\-0-9]+ }
-
-  String { '"' (!["\\] | "\\" _)* '"' }
-
-  Boolean { "#t" | "#f" }
-
-  LineComment { ";" ![\n]* }
-
+  text { ![\n\t\r #\[\]] }
   space { $[ \t\n\r]+ }
+  LineComment { "#"![\n]* }
 
-  "(" ")"
+  "[" "]"
 }
 
 @detectDelim
